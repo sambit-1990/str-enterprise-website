@@ -1,0 +1,284 @@
+/* ===========================
+   STR Enterprise Website
+=========================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:'Poppins',sans-serif;
+    color:#333;
+    background:#f8fbff;
+    line-height:1.7;
+}
+
+.container{
+    width:90%;
+    max-width:1200px;
+    margin:auto;
+}
+
+/* Header */
+
+header{
+    position:fixed;
+    width:100%;
+    top:0;
+    left:0;
+    background:#ffffff;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+    z-index:999;
+}
+
+.nav{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px 0;
+}
+
+.logo h2{
+    color:#0b74c8;
+    font-size:28px;
+}
+
+.logo p{
+    font-size:13px;
+    color:#666;
+}
+
+nav ul{
+    display:flex;
+    list-style:none;
+}
+
+nav ul li{
+    margin-left:28px;
+}
+
+nav ul li a{
+    color:#333;
+    text-decoration:none;
+    font-weight:500;
+    transition:.3s;
+}
+
+nav ul li a:hover{
+    color:#0b74c8;
+}
+
+/* Hero */
+
+.hero{
+    height:100vh;
+    background:url("images/hero.jpg") center center/cover no-repeat;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    position:relative;
+}
+
+.overlay{
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:rgba(0,52,89,.60);
+}
+
+.hero-content{
+    position:relative;
+    text-align:center;
+    color:white;
+    max-width:850px;
+    padding:20px;
+}
+
+.hero h1{
+    font-size:58px;
+    margin-bottom:20px;
+}
+
+.hero p{
+    font-size:21px;
+    margin-bottom:35px;
+}
+
+.btn{
+    display:inline-block;
+    background:#0b74c8;
+    color:white;
+    padding:15px 34px;
+    border-radius:50px;
+    text-decoration:none;
+    transition:.3s;
+    font-weight:600;
+}
+
+.btn:hover{
+    background:#095da0;
+    transform:translateY(-3px);
+}
+
+/* Sections */
+
+.section{
+    padding:90px 0;
+}
+
+.section-title{
+    text-align:center;
+    font-size:38px;
+    color:#0b74c8;
+    margin-bottom:50px;
+}
+
+/* Product Cards */
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:35px;
+}
+
+.card{
+    background:white;
+    border-radius:15px;
+    overflow:hidden;
+    box-shadow:0 12px 25px rgba(0,0,0,.08);
+    transition:.4s;
+}
+
+.card:hover{
+    transform:translateY(-10px);
+}
+
+.card img{
+    width:100%;
+    height:230px;
+    object-fit:cover;
+}
+
+.card h3{
+    padding:20px 20px 10px;
+    color:#0b74c8;
+}
+
+.card p{
+    padding:0 20px 25px;
+}
+
+/* Why Us */
+
+.features{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:30px;
+}
+
+.features div{
+    background:white;
+    padding:30px;
+    border-radius:12px;
+    box-shadow:0 10px 20px rgba(0,0,0,.08);
+}
+
+.features h3{
+    color:#0b74c8;
+    margin-bottom:15px;
+}
+
+/* Contact */
+
+.contact-box{
+    max-width:700px;
+    margin:auto;
+    background:white;
+    padding:45px;
+    border-radius:15px;
+    box-shadow:0 12px 30px rgba(0,0,0,.08);
+}
+
+.contact-box p{
+    margin-bottom:22px;
+}
+
+.contact-box a{
+    color:#0b74c8;
+    text-decoration:none;
+}
+
+/* Footer */
+
+footer{
+    background:#0b74c8;
+    color:white;
+    text-align:center;
+    padding:25px 0;
+}
+
+/* WhatsApp */
+
+.whatsapp{
+    position:fixed;
+    right:25px;
+    bottom:25px;
+    width:65px;
+    height:65px;
+    background:#25D366;
+    color:white;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+    font-size:30px;
+    box-shadow:0 10px 20px rgba(0,0,0,.3);
+    transition:.3s;
+}
+
+.whatsapp:hover{
+    transform:scale(1.1);
+}
+
+/* Mobile */
+
+@media(max-width:900px){
+
+.hero h1{
+    font-size:40px;
+}
+
+.hero p{
+    font-size:18px;
+}
+
+.nav{
+    flex-direction:column;
+}
+
+nav ul{
+    margin-top:15px;
+    flex-wrap:wrap;
+    justify-content:center;
+}
+
+nav ul li{
+    margin:8px;
+}
+
+.section-title{
+    font-size:30px;
+}
+
+.contact-box{
+    padding:30px;
+}
+
+}
