@@ -55,7 +55,7 @@ export const siteData = {
     {
       id: 'garlic-powder',
       name: 'Dehydrated Garlic Powder',
-      image: 'https://images.pexels.com/photos/7160696/pexels-photo-7160696.jpeg',
+      image: 'https://images.unsplash.com/photo-1595414902678-862fe51c9f27',
       points: [
         'Rich aroma & pungency',
         'Uniform granulation',
