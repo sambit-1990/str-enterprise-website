@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Leaf, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { siteData } from '../data/mock';
+
+const LOGO_URL = 'https://customer-assets-lxgj4vgw.emergentagent.net/job_agro-commerce-portal/artifacts/4nsn414f_STR%20Logo%20-%20R1.jpeg';
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -27,9 +29,7 @@ const Header = () => {
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-10 py-3 flex items-center justify-between">
         <a href="#home" onClick={(e) => { e.preventDefault(); handleClick('#home'); }} className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-full bg-[#2f6b3a] flex items-center justify-center shadow-sm">
-            <Leaf className="w-6 h-6 text-[#e2b34b]" strokeWidth={2.2} />
-          </div>
+          <img src={LOGO_URL} alt="STR Enterprise" className="w-12 h-12 object-contain" />
           <div className="leading-tight">
             <div className="font-extrabold text-[#1f4a2a] text-xl tracking-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>
               STR <span className="text-[#2f6b3a]">ENTERPRISE</span>

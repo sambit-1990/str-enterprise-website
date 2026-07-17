@@ -1,6 +1,8 @@
 import React from 'react';
-import { Leaf, MapPin, Mail, Phone, Linkedin, Facebook, Instagram } from 'lucide-react';
+import { MapPin, Mail, Phone, Linkedin, Facebook, Instagram } from 'lucide-react';
 import { siteData } from '../data/mock';
+
+const LOGO_URL = 'https://customer-assets-lxgj4vgw.emergentagent.net/job_agro-commerce-portal/artifacts/4nsn414f_STR%20Logo%20-%20R1.jpeg';
 
 const Footer = () => {
   const scrollTo = (href) => {
@@ -15,8 +17,8 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           <div>
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur flex items-center justify-center">
-                <Leaf className="w-6 h-6 text-[#e2b34b]" />
+              <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm p-1">
+                <img src={LOGO_URL} alt="STR Enterprise" className="w-full h-full object-contain rounded-full" />
               </div>
               <div>
                 <div className="font-extrabold text-white text-lg tracking-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>

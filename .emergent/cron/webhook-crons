@@ -1,8 +1,8 @@
 # Managed by Emergent webhook-cron (pod-local syscron). DO NOT EDIT.
 SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-JOB_ID=agro-commerce-portal
+JOB_ID=11a8216b-991f-4741-910b-603da97dfa83
 WEBHOOK_ENV_FILE=/app/backend/.env
-CRON_API_URL=http://agent-service:8009
+CRON_API_URL=https://as.int.apis.emergentagent.com
 
-* * * * * root JOB_ID=agro-commerce-portal CRON_API_URL=http://agent-service:8009 /bin/sh /app/.emergent/cron/watch_crons.sh >> /var/log/webhook-cron.log 2>&1
+* * * * * root JOB_ID=11a8216b-991f-4741-910b-603da97dfa83 CRON_API_URL=https://as.int.apis.emergentagent.com /bin/sh /app/.emergent/cron/watch_crons.sh >> /var/log/webhook-cron.log 2>&1

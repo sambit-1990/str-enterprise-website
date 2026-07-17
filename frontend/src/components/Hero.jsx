@@ -9,9 +9,9 @@ const Hero = () => {
   };
 
   return (
-    <section id="home" className="relative pt-24 md:pt-28">
+    <section id="home" className="relative">
       <div
-        className="relative min-h-[560px] md:min-h-[640px] flex items-center"
+        className="relative min-h-[640px] md:min-h-[720px] flex items-center pt-24 md:pt-28"
         style={{
           backgroundImage:
             "linear-gradient(90deg, rgba(245,232,215,0.92) 0%, rgba(245,232,215,0.55) 45%, rgba(245,232,215,0.15) 100%), url('https://images.pexels.com/photos/31280796/pexels-photo-31280796.jpeg')",
@@ -29,7 +29,7 @@ const Hero = () => {
         <div className="relative max-w-7xl mx-auto px-6 lg:px-10 w-full">
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/70 backdrop-blur-sm border border-[#c8951e]/30 text-[#8a6410] text-xs font-semibold uppercase tracking-widest mb-6">
-              Kolkata • India • Est. 2020
+              Kolkata • India
             </div>
             <h1
               className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#1f4a2a] leading-[1.08] tracking-tight"
