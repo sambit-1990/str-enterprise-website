@@ -80,7 +80,7 @@ const Footer = () => {
             © {siteData.company.year} {siteData.company.name}. All rights reserved.
           </div>
           <div className="text-xs text-[#c8bfa3]">
-            Designed for global agro exports — Kolkata, India
+            Designed for STR Enterprise — Kolkata, India
           </div>
         </div>
       </div>
