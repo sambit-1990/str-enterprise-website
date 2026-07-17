@@ -55,7 +55,7 @@ export const siteData = {
     {
       id: 'garlic-powder',
       name: 'Dehydrated Garlic Powder',
-      image: 'https://images.unsplash.com/photo-1595414902678-862fe51c9f27',
+      image: 'https://customer-assets-lxgj4vgw.emergentagent.net/job_agro-commerce-portal/artifacts/w5mmnote_Garlic.jpeg',
       points: [
         'Rich aroma & pungency',
         'Uniform granulation',
@@ -67,7 +67,9 @@ export const siteData = {
     {
       id: 'turmeric-powder',
       name: 'Pure Turmeric Powder',
-      image: 'https://images.pexels.com/photos/7925765/pexels-photo-7925765.jpeg',
+      image: 'https://customer-assets-lxgj4vgw.emergentagent.net/job_agro-commerce-portal/artifacts/ze8wb4ce_Turmeric.jpeg',
+      objectPosition: 'center top',
+      backgroundSize: 'auto 118%',
       points: [
         'High curcumin content',
         'Vibrant natural colour',

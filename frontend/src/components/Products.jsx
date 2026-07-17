@@ -51,10 +51,15 @@ const ProductCard = ({ product, reverse }) => {
 
       <div className="relative">
         <div className="absolute inset-0 bg-gradient-to-br from-[#f9efe0] to-[#f0e2c8] rounded-2xl transform rotate-2" />
-        <img
-          src={product.image}
-          alt={product.name}
-          className="relative rounded-2xl shadow-xl w-full h-[380px] md:h-[440px] object-cover"
+        <div
+          role="img"
+          aria-label={product.name}
+          className="relative rounded-2xl shadow-xl w-full h-[380px] md:h-[440px] bg-center bg-no-repeat"
+          style={{
+            backgroundImage: `url('${product.image}')`,
+            backgroundSize: product.backgroundSize || 'cover',
+            backgroundPosition: product.objectPosition || 'center center',
+          }}
         />
       </div>
     </div>
