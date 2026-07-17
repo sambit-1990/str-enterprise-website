@@ -44,12 +44,10 @@ const About = () => {
         </div>
 
         <div className="relative">
-          <div className="absolute -top-4 -left-4 w-32 h-32 border-2 border-[#c8951e] rounded-xl -z-0" />
-          <div className="absolute -bottom-4 -right-4 w-32 h-32 border-2 border-[#2f6b3a] rounded-xl -z-0" />
           <img
             src={siteData.about.image}
             alt="STR Enterprise"
-            className="relative rounded-xl shadow-xl w-full h-[420px] object-cover z-10"
+            className="relative rounded-xl shadow-xl w-full h-[420px] object-cover"
           />
         </div>
       </div>
