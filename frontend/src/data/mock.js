@@ -43,7 +43,7 @@ export const siteData = {
     {
       id: 'onion-powder',
       name: 'Dehydrated Onion Powder',
-      image: 'https://images.unsplash.com/photo-1693996046865-19217d179161',
+      image: '/generated/onion_powder.png',
       points: [
         'Fine & free-flowing powder',
         'Natural color & aroma',
