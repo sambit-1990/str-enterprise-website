@@ -59,13 +59,9 @@
     "tailwindcss-animate": "1.0.7",
     "vaul": "1.1.2",
     "zod": "3.24.4"
-    
+    "ajv": "8.17.1",
+    "ajv-keywords": "5.1.0"
   },
-  "dependencies": {
-  ...
-  "ajv": "^8.17.1",
-  "ajv-keywords": "^5.1.0"
-},
   "scripts": {
     "start": "craco start",
     "build": "craco build",
@@ -99,8 +95,6 @@
     "globals": "15.15.0",
     "postcss": "8.5.10",
     "tailwindcss": "3.4.17"
-    "ajv": "8.17.1",
-    "ajv-keywords": "5.1.0"
   },
   "resolutions": {
     "react-router": "7.15.0",
