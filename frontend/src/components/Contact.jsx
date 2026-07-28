@@ -1,22 +1,29 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send, MessageCircle, CheckCircle2 } from 'lucide-react';
+import axios from 'axios';
+import { Mail, Phone, MapPin, Send, MessageCircle, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 import { siteData } from '../data/mock';
+
+const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 const Contact = () => {
   const [form, setForm] = useState({ name: '', email: '', phone: '', product: 'Onion Powder', message: '' });
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState('idle'); // idle | sending | sent | error
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // MOCKED: stores in localStorage for now
-    const list = JSON.parse(localStorage.getItem('str_enquiries') || '[]');
-    list.push({ ...form, at: new Date().toISOString() });
-    localStorage.setItem('str_enquiries', JSON.stringify(list));
-    setSent(true);
-    setTimeout(() => setSent(false), 4000);
-    setForm({ name: '', email: '', phone: '', product: 'Onion Powder', message: '' });
+    if (status === 'sending') return;
+    setStatus('sending');
+    try {
+      await axios.post(`${API}/contact`, form, { timeout: 15000 });
+      setStatus('sent');
+      setForm({ name: '', email: '', phone: '', product: 'Onion Powder', message: '' });
+      setTimeout(() => setStatus('idle'), 5000);
+    } catch (err) {
+      console.error('Enquiry submission failed:', err);
+      setStatus('error');
+    }
   };
 
   return (
@@ -98,12 +105,23 @@ const Contact = () => {
               <label className="text-xs font-semibold text-[#1f4a2a] uppercase tracking-wider">Your Message</label>
               <textarea name="message" rows="5" value={form.message} onChange={handleChange} className="mt-1 w-full px-4 py-2.5 rounded-md border border-[#e2d7c1] bg-[#fbf7ef] focus:outline-none focus:ring-2 focus:ring-[#c8951e]/40 focus:border-[#c8951e] transition resize-none" placeholder="Please share quantity, packaging, destination country..." />
             </div>
-            <button type="submit" className="mt-5 inline-flex items-center justify-center gap-2 h-12 px-6 rounded-md text-white font-semibold shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5" style={{ background: 'linear-gradient(90deg,#d9a441 0%, #b3801f 100%)' }}>
-              <Send className="w-4 h-4" /> Send Enquiry
+            <button
+              type="submit"
+              disabled={status === 'sending'}
+              className="mt-5 inline-flex items-center justify-center gap-2 h-12 px-6 rounded-md text-white font-semibold shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-md"
+              style={{ background: 'linear-gradient(90deg,#d9a441 0%, #b3801f 100%)' }}
+            >
+              {status === 'sending' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+              {status === 'sending' ? 'Sending...' : 'Send Enquiry'}
             </button>
-            {sent && (
+            {status === 'sent' && (
               <div className="mt-4 flex items-center gap-2 text-[#2f6b3a] text-sm font-medium">
                 <CheckCircle2 className="w-4 h-4" /> Enquiry received. We'll be in touch within 24 hours.
+              </div>
+            )}
+            {status === 'error' && (
+              <div className="mt-4 flex items-center gap-2 text-red-600 text-sm font-medium">
+                <AlertCircle className="w-4 h-4" /> Something went wrong sending your enquiry. Please try WhatsApp or call us directly.
               </div>
             )}
           </form>

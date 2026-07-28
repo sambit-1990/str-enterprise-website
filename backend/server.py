@@ -1,11 +1,15 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, HTTPException
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
+import ssl
+import asyncio
+import smtplib
 import logging
+from email.message import EmailMessage
 from pathlib import Path
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, Field, ConfigDict, EmailStr
 from typing import List
 import uuid
 from datetime import datetime, timezone
@@ -18,6 +22,18 @@ load_dotenv(ROOT_DIR / '.env')
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
+
+# SMTP configuration for the website contact/enquiry form.
+# GoDaddy hosts two different email products with different SMTP servers -
+# set SMTP_HOST/SMTP_PORT to match whichever one info@str-enterprise.com is on:
+#   Legacy "Workspace Email"        -> SMTP_HOST=smtpout.secureserver.net, SMTP_PORT=465
+#   Email running on Microsoft 365  -> SMTP_HOST=smtp.office365.com,      SMTP_PORT=587
+# See backend/.env.example for the full list of variables to set.
+SMTP_HOST = os.environ.get('SMTP_HOST', 'smtpout.secureserver.net')
+SMTP_PORT = int(os.environ.get('SMTP_PORT', '465'))
+SMTP_USER = os.environ.get('SMTP_USER', 'info@str-enterprise.com')
+SMTP_PASSWORD = os.environ.get('SMTP_PASSWORD')
+CONTACT_RECEIVER_EMAIL = os.environ.get('CONTACT_RECEIVER_EMAIL', SMTP_USER)
 
 # Create the main app without a prefix
 app = FastAPI()
@@ -65,6 +81,76 @@ async def get_status_checks():
             check['timestamp'] = datetime.fromisoformat(check['timestamp'])
     
     return status_checks
+
+
+class EnquiryCreate(BaseModel):
+    name: str = Field(..., min_length=1, max_length=200)
+    email: EmailStr
+    phone: str = Field(default="", max_length=50)
+    product: str = Field(default="", max_length=100)
+    message: str = Field(default="", max_length=5000)
+
+
+class EnquiryResponse(BaseModel):
+    success: bool
+    message: str
+
+
+def _send_enquiry_email_sync(enquiry: "EnquiryCreate") -> None:
+    """Blocking SMTP send - only call this via asyncio.to_thread so it
+    doesn't block the event loop."""
+    if not SMTP_PASSWORD:
+        raise RuntimeError("SMTP_PASSWORD is not configured on the server")
+
+    msg = EmailMessage()
+    msg['Subject'] = f"New Website Enquiry - {enquiry.product or 'General Enquiry'}"
+    msg['From'] = SMTP_USER
+    msg['To'] = CONTACT_RECEIVER_EMAIL
+    msg['Reply-To'] = enquiry.email
+    msg.set_content(
+        "New enquiry from the STR Enterprise website:\n\n"
+        f"Name: {enquiry.name}\n"
+        f"Email: {enquiry.email}\n"
+        f"Phone: {enquiry.phone or '-'}\n"
+        f"Interested Product: {enquiry.product or '-'}\n\n"
+        f"Message:\n{enquiry.message or '-'}\n"
+    )
+
+    context = ssl.create_default_context()
+    if SMTP_PORT == 465:
+        with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, context=context, timeout=15) as server:
+            server.login(SMTP_USER, SMTP_PASSWORD)
+            server.send_message(msg)
+    else:
+        with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=15) as server:
+            server.starttls(context=context)
+            server.login(SMTP_USER, SMTP_PASSWORD)
+            server.send_message(msg)
+
+
+@api_router.post("/contact", response_model=EnquiryResponse)
+async def submit_enquiry(enquiry: EnquiryCreate):
+    # Best-effort audit trail in MongoDB so an enquiry is never fully lost
+    # even if the email step below fails (e.g. SMTP not yet configured).
+    try:
+        doc = enquiry.model_dump()
+        doc['id'] = str(uuid.uuid4())
+        doc['created_at'] = datetime.now(timezone.utc).isoformat()
+        await db.enquiries.insert_one(doc)
+    except Exception:
+        logger.exception("Failed to store enquiry in MongoDB")
+
+    try:
+        await asyncio.to_thread(_send_enquiry_email_sync, enquiry)
+    except Exception:
+        logger.exception("Failed to send enquiry email")
+        raise HTTPException(
+            status_code=502,
+            detail="We couldn't send your enquiry right now. Please reach us on WhatsApp or by phone instead.",
+        )
+
+    return EnquiryResponse(success=True, message="Enquiry sent successfully.")
+
 
 # Include the router in the main app
 app.include_router(api_router)
