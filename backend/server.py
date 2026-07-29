@@ -18,10 +18,17 @@ from datetime import datetime, timezone
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-# MongoDB connection
-mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
+# MongoDB connection - optional. It's only used for a best-effort backup
+# copy of each enquiry; the contact form and email sending both work fine
+# without it. Set MONGO_URL + DB_NAME later if you want that backup log.
+mongo_url = os.environ.get('MONGO_URL')
+db_name = os.environ.get('DB_NAME')
+if mongo_url and db_name:
+    client = AsyncIOMotorClient(mongo_url)
+    db = client[db_name]
+else:
+    client = None
+    db = None
 
 # SMTP configuration for the website contact/enquiry form.
 # GoDaddy hosts two different email products with different SMTP servers -
@@ -60,6 +67,8 @@ async def root():
 
 @api_router.post("/status", response_model=StatusCheck)
 async def create_status_check(input: StatusCheckCreate):
+    if db is None:
+        raise HTTPException(status_code=503, detail="Database not configured")
     status_dict = input.model_dump()
     status_obj = StatusCheck(**status_dict)
     
@@ -72,6 +81,8 @@ async def create_status_check(input: StatusCheckCreate):
 
 @api_router.get("/status", response_model=List[StatusCheck])
 async def get_status_checks():
+    if db is None:
+        raise HTTPException(status_code=503, detail="Database not configured")
     # Exclude MongoDB's _id field from the query results
     status_checks = await db.status_checks.find({}, {"_id": 0}).to_list(1000)
     
@@ -133,10 +144,11 @@ async def submit_enquiry(enquiry: EnquiryCreate):
     # Best-effort audit trail in MongoDB so an enquiry is never fully lost
     # even if the email step below fails (e.g. SMTP not yet configured).
     try:
-        doc = enquiry.model_dump()
-        doc['id'] = str(uuid.uuid4())
-        doc['created_at'] = datetime.now(timezone.utc).isoformat()
-        await db.enquiries.insert_one(doc)
+        if db is not None:
+            doc = enquiry.model_dump()
+            doc['id'] = str(uuid.uuid4())
+            doc['created_at'] = datetime.now(timezone.utc).isoformat()
+            await db.enquiries.insert_one(doc)
     except Exception:
         logger.exception("Failed to store enquiry in MongoDB")
 
@@ -172,4 +184,5 @@ logger = logging.getLogger(__name__)
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
-    client.close()
+    if client is not None:
+        client.close()
